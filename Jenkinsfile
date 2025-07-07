@@ -19,9 +19,15 @@ pipeline {
     }
 
        stage('Clean') {
-                steps {
-                     bat 'rmdir /s /q dist'
-                }
+                 steps {
+                   bat '''
+                   if exist dist (
+                     rmdir /s /q dist
+                   ) else (
+                     echo Folder dist does not exist.
+                   )
+                   '''
+                 }
             }
 
     stage('Build') {
