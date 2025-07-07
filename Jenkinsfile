@@ -20,7 +20,7 @@ pipeline {
 
        stage('Clean') {
                 steps {
-                    bat 'rm -rf dist/'
+                     bat 'rmdir /s /q dist'
                 }
             }
 
