@@ -32,31 +32,31 @@ pipeline {
             }
 
 
-    stage('Build Angular') {
-              steps {
-                  bat 'npm install'
-                  bat 'npm run build -- --configuration=production'
-                  bat 'dir dist\\frontend-kaddem2' // lister le contenu du répertoire
-              }
-          }
-
-          stage('SonarQube Analysis') {
-            steps {
-              withSonarQubeEnv('sonarqube_server') {
-                bat '''
-                  npx sonar-scanner ^
-                  -Dsonar.projectKey=frontend-kaddem ^
-                  -Dsonar.projectName=Frontend-Kaddem ^
-                  -Dsonar.sources=src ^
-                  -Dsonar.exclusions=**/*.spec.ts,^**/node_modules/** ^
-                  -Dsonar.language=ts ^
-                  -Dsonar.sourceEncoding=UTF-8 ^
-                  -Dsonar.login=%SONAR_TOKEN%
-                '''
-              }
-            }
-          }
-
+//     stage('Build Angular') {
+//               steps {
+//                   bat 'npm install'
+//                   bat 'npm run build -- --configuration=production'
+//                   bat 'dir dist\\frontend-kaddem2' // lister le contenu du répertoire
+//               }
+//           }
+//
+//           stage('SonarQube Analysis') {
+//             steps {
+//               withSonarQubeEnv('sonarqube_server') {
+//                 bat '''
+//                   npx sonar-scanner ^
+//                   -Dsonar.projectKey=frontend-kaddem ^
+//                   -Dsonar.projectName=Frontend-Kaddem ^
+//                   -Dsonar.sources=src ^
+//                   -Dsonar.exclusions=**/*.spec.ts,^**/node_modules/** ^
+//                   -Dsonar.language=ts ^
+//                   -Dsonar.sourceEncoding=UTF-8 ^
+//                   -Dsonar.login=%SONAR_TOKEN%
+//                 '''
+//               }
+//             }
+//           }
+//
 
 
     stage('Build Docker Image') {
