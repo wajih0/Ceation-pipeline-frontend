@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'node-lts' // Assure-toi que tu as ajouté Node.js dans Jenkins → Global Tool Configuration
+    nodejs 'Node-24' // Assure-toi que tu as ajouté Node.js dans Jenkins → Global Tool Configuration
   }
 
   environment {
