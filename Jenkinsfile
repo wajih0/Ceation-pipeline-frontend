@@ -72,6 +72,29 @@ stage('Package') {
     }
 }
 
+stage('Upload Front to Nexus') {
+    steps {
+        script {
+            def nexusRawRepoUrl = 'http://localhost:8082/repository/front-devops/'
+            def distDir = 'dist\\frontend-kaddem2'
+            def credentialsId = 'front-nexus'
+
+            withCredentials([usernamePassword(credentialsId: credentialsId, passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
+                bat """
+                for /R ${distDir} %%f in (*) do (
+                    set "fullPath=%%f"
+                    setlocal enabledelayedexpansion
+                    set "relPath=!fullPath:${distDir}=!"
+                    powershell -Command "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -Method Put -InFile '!fullPath!' -Credential (New-Object System.Management.Automation.PSCredential('$NEXUS_USER', (ConvertTo-SecureString '$NEXUS_PASS' -AsPlainText -Force)))"
+                    endlocal
+                )
+                """
+            }
+        }
+    }
+}
+
+
 
 
     stage('Build Docker Image') {
