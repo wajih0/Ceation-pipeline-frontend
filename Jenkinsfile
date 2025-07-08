@@ -31,19 +31,6 @@ pipeline {
                  }
             }
 
-            stage('Package') {
-                steps {
-                    script {
-                        FRONTEND_VERSION = "1.0.0.${env.BUILD_NUMBER}"
-                        ARTIFACT_NAME = "kaddem-frontend-${FRONTEND_VERSION}.zip"
-
-                        bat """
-                            powershell -Command "Compress-Archive -Path dist\\* -DestinationPath ${ARTIFACT_NAME}"
-                            dir ${ARTIFACT_NAME}
-                        """
-                    }
-                }
-            }
 
 
 
@@ -55,22 +42,35 @@ pipeline {
               }
           }
 
-          stage('SonarQube Analysis') {
-            steps {
-              withSonarQubeEnv('sonarqube_server') {
-                bat '''
-                  npx sonar-scanner ^
-                  -Dsonar.projectKey=frontend-kaddem ^
-                  -Dsonar.projectName=Frontend-Kaddem ^
-                  -Dsonar.sources=src ^
-                  -Dsonar.exclusions=**/*.spec.ts,^**/node_modules/** ^
-                  -Dsonar.language=ts ^
-                  -Dsonar.sourceEncoding=UTF-8 ^
-                  -Dsonar.login=%SONAR_TOKEN%
-                '''
-              }
-            }
-          }
+//           stage('SonarQube Analysis') {
+//             steps {
+//               withSonarQubeEnv('sonarqube_server') {
+//                 bat '''
+//                   npx sonar-scanner ^
+//                   -Dsonar.projectKey=frontend-kaddem ^
+//                   -Dsonar.projectName=Frontend-Kaddem ^
+//                   -Dsonar.sources=src ^
+//                   -Dsonar.exclusions=**/*.spec.ts,^**/node_modules/** ^
+//                   -Dsonar.language=ts ^
+//                   -Dsonar.sourceEncoding=UTF-8 ^
+//                   -Dsonar.login=%SONAR_TOKEN%
+//                 '''
+//               }
+//             }
+//           }
+stage('Package') {
+    steps {
+        script {
+            FRONTEND_VERSION = "1.0.0.${env.BUILD_NUMBER}"
+            ARTIFACT_NAME = "kaddem-frontend-${FRONTEND_VERSION}.zip"
+
+            bat """
+                powershell -Command "Compress-Archive -Path dist\\frontend-kaddem2\\* -DestinationPath ${ARTIFACT_NAME}"
+                dir ${ARTIFACT_NAME}
+            """
+        }
+    }
+}
 
 
 
