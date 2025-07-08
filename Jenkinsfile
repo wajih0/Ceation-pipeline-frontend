@@ -94,7 +94,7 @@ stage('Upload Front to Nexus') {
                 """
             }
         }
-    }
+
 }
 
 }
