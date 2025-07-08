@@ -81,17 +81,22 @@ stage('Upload Front to Nexus') {
 
             withCredentials([usernamePassword(credentialsId: credentialsId, passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
                 bat """
-                for /R ${distDir} %%f in (*) do (
+                @echo off
+                setlocal EnableDelayedExpansion
+                for /R "${distDir}" %%f in (*) do (
                     set "fullPath=%%f"
-                    setlocal enabledelayedexpansion
                     set "relPath=!fullPath:${distDir}=!"
-                    powershell -Command "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -Method Put -InFile '!fullPath!' -Credential (New-Object System.Management.Automation.PSCredential('$NEXUS_USER', (ConvertTo-SecureString '$NEXUS_PASS' -AsPlainText -Force)))"
-                    endlocal
+                    set "relPath=!relPath:\\=/!"
+                    powershell -Command ^
+                        "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -Method Put -InFile '!fullPath!' -Credential (New-Object System.Management.Automation.PSCredential('$NEXUS_USER', (ConvertTo-SecureString '$NEXUS_PASS' -AsPlainText -Force)))"
                 )
+                endlocal
                 """
             }
         }
     }
+}
+
 }
 
 
