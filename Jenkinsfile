@@ -6,7 +6,7 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME = "wajihdocker/frontend-kaddem:latest"
+    IMAGE_NAME = "wajihdocker/frontend-kaddem"
     IMAGE_TAG = "latest"
     DOCKER_REGISTRY = "" // <-- change selon ton DockerHub ou Nexus
     SONAR_TOKEN = credentials('sonar-token')
