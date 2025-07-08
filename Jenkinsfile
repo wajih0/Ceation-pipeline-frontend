@@ -42,22 +42,22 @@ pipeline {
               }
           }
 
-//           stage('SonarQube Analysis') {
-//             steps {
-//               withSonarQubeEnv('sonarqube_server') {
-//                 bat '''
-//                   npx sonar-scanner ^
-//                   -Dsonar.projectKey=frontend-kaddem ^
-//                   -Dsonar.projectName=Frontend-Kaddem ^
-//                   -Dsonar.sources=src ^
-//                   -Dsonar.exclusions=**/*.spec.ts,^**/node_modules/** ^
-//                   -Dsonar.language=ts ^
-//                   -Dsonar.sourceEncoding=UTF-8 ^
-//                   -Dsonar.login=%SONAR_TOKEN%
-//                 '''
-//               }
-//             }
-//           }
+          stage('SonarQube Analysis') {
+            steps {
+              withSonarQubeEnv('sonarqube_server') {
+                bat '''
+                  npx sonar-scanner ^
+                  -Dsonar.projectKey=frontend-kaddem ^
+                  -Dsonar.projectName=Frontend-Kaddem ^
+                  -Dsonar.sources=src ^
+                  -Dsonar.exclusions=**/*.spec.ts,^**/node_modules/** ^
+                  -Dsonar.language=ts ^
+                  -Dsonar.sourceEncoding=UTF-8 ^
+                  -Dsonar.login=%SONAR_TOKEN%
+                '''
+              }
+            }
+          }
 stage('Package') {
     steps {
         script {
