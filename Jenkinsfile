@@ -74,25 +74,20 @@ stage('Package') {
 stage('Upload Front to Nexus') {
     steps {
         script {
-            def nexusRawRepoUrl = 'http://localhost:8082/repository/front-devops/'
+            def nexusRawRepoUrl = 'http://localhost:8081/repository/front-devops/'
             def distDir = 'dist\\frontend-kaddem2'
             def credentialsId = 'front-nexus'
 
-            withCredentials([usernamePassword(credentialsId: credentialsId, passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+            withCredentials([usernamePassword(credentialsId: credentialsId, passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
                 bat """
                 @echo off
-                setlocal EnableDelayedExpansion
+                setlocal enabledelayedexpansion
 
                 for /R "${distDir}" %%f in (*) do (
                     set "fullPath=%%f"
                     set "relPath=!fullPath:${distDir}=!"
                     set "relPath=!relPath:\\=/!"
-
-                    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-                        "$user = '%USER%';" ^
-                        "$pass = ConvertTo-SecureString '%PASS%' -AsPlainText -Force;" ^
-                        "$cred = New-Object System.Management.Automation.PSCredential(\\$user, \\$pass);" ^
-                        "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -UseBasicParsing -Method Put -InFile '!fullPath!' -Credential \\$cred"
+                    curl -u "%NEXUS_USER%:%NEXUS_PASS%" --upload-file "!fullPath!" "${nexusRawRepoUrl}!relPath!"
                 )
 
                 endlocal
@@ -101,6 +96,7 @@ stage('Upload Front to Nexus') {
         }
     }
 }
+
 
 
 
