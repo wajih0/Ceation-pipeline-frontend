@@ -9,6 +9,7 @@ pipeline {
     IMAGE_NAME = "wajihdocker/demoproduit"
     IMAGE_TAG = "latest"
     DOCKER_REGISTRY = "" // <-- change selon ton DockerHub ou Nexus
+    SONAR_TOKEN = credentials('sonar-token')
   }
 
   stages {
@@ -30,12 +31,29 @@ pipeline {
                  }
             }
 
-    stage('Build') {
-              steps {
-                  bat 'npm install'
-                  bat 'npm run build -- --configuration=production'
-                  bat 'dir' // lister le contenu du répertoire
+//     stage('Build') {
+//               steps {
+//                   bat 'npm install'
+//                   bat 'npm run build -- --configuration=production'
+//                   bat 'dir' // lister le contenu du répertoire
+//               }
+//           }
+
+          stage('SonarQube Analysis') {
+            steps {
+              withSonarQubeEnv('sonarqube_server') {
+                bat '''
+                  npx sonar-scanner ^
+                  -Dsonar.projectKey=frontend-kaddem ^
+                  -Dsonar.projectName=Frontend-Kaddem ^
+                  -Dsonar.sources=src ^
+                  -Dsonar.exclusions=**/*.spec.ts,^**/node_modules/** ^
+                  -Dsonar.language=ts ^
+                  -Dsonar.sourceEncoding=UTF-8 ^
+                  -Dsonar.login=%SONAR_TOKEN%
+                '''
               }
+            }
           }
 
 
