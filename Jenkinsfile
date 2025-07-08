@@ -34,7 +34,7 @@ pipeline {
               steps {
                   bat 'npm install'
                   bat 'npm run build -- --configuration=production'
-                  bat 'ls -al' // Vérifiez le contenu du répertoire
+                  bat 'dir' // lister le contenu du répertoire
               }
           }
 
