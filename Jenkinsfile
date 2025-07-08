@@ -71,7 +71,6 @@ stage('Package') {
         }
     }
 }
-
 stage('Upload Front to Nexus') {
     steps {
         script {
@@ -79,25 +78,32 @@ stage('Upload Front to Nexus') {
             def distDir = 'dist\\frontend-kaddem2'
             def credentialsId = 'front-nexus'
 
-            withCredentials([usernamePassword(credentialsId: credentialsId, passwordVariable: 'NEXUS_PASS', usernameVariable: 'NEXUS_USER')]) {
+            withCredentials([usernamePassword(credentialsId: credentialsId, passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                 bat """
                 @echo off
                 setlocal EnableDelayedExpansion
+
                 for /R "${distDir}" %%f in (*) do (
                     set "fullPath=%%f"
                     set "relPath=!fullPath:${distDir}=!"
                     set "relPath=!relPath:\\=/!"
-                    powershell -Command ^
-                        "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -Method Put -InFile '!fullPath!' -Credential (New-Object System.Management.Automation.PSCredential('$NEXUS_USER', (ConvertTo-SecureString '$NEXUS_PASS' -AsPlainText -Force)))"
+
+                    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+                        "$user = '%USER%';" ^
+                        "$pass = ConvertTo-SecureString '%PASS%' -AsPlainText -Force;" ^
+                        "$cred = New-Object System.Management.Automation.PSCredential(\$user, \$pass);" ^
+                        "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -UseBasicParsing -Method Put -InFile '!fullPath!' -Credential \$cred"
                 )
+
                 endlocal
                 """
             }
         }
-
+    }
 }
 
-}
+
+
 
 
 
