@@ -6,14 +6,14 @@ pipeline {
   }
 
   environment {
-    IMAGE_NAME = "wajihdocker/demoproduit"
+    IMAGE_NAME = "wajihdocker/frontend-kaddem:latest"
     IMAGE_TAG = "latest"
     DOCKER_REGISTRY = "" // <-- change selon ton DockerHub ou Nexus
     SONAR_TOKEN = credentials('sonar-token')
   }
 
   stages {
-    stage('git') {
+    stage('checkout') {
      steps {
                     git branch: 'master', url: 'https://github.com/wajih0/Ceation-pipeline-frontend.git'
                 }
@@ -31,13 +31,14 @@ pipeline {
                  }
             }
 
-//     stage('Build') {
-//               steps {
-//                   bat 'npm install'
-//                   bat 'npm run build -- --configuration=production'
-//                   bat 'dir' // lister le contenu du répertoire
-//               }
-//           }
+
+    stage('Build Angular') {
+              steps {
+                  bat 'npm install'
+                  bat 'npm run build -- --configuration=production'
+                  bat 'dir dist\\frontend-kaddem2' // lister le contenu du répertoire
+              }
+          }
 
           stage('SonarQube Analysis') {
             steps {
