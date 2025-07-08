@@ -91,8 +91,8 @@ stage('Upload Front to Nexus') {
                     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
                         "$user = '%USER%';" ^
                         "$pass = ConvertTo-SecureString '%PASS%' -AsPlainText -Force;" ^
-                        "$cred = New-Object System.Management.Automation.PSCredential(\$user, \$pass);" ^
-                        "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -UseBasicParsing -Method Put -InFile '!fullPath!' -Credential \$cred"
+                        "$cred = New-Object System.Management.Automation.PSCredential(\\$user, \\$pass);" ^
+                        "Invoke-WebRequest -Uri '${nexusRawRepoUrl}!relPath!' -UseBasicParsing -Method Put -InFile '!fullPath!' -Credential \\$cred"
                 )
 
                 endlocal
@@ -101,6 +101,7 @@ stage('Upload Front to Nexus') {
         }
     }
 }
+
 
 
 
