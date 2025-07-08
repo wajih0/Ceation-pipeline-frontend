@@ -31,6 +31,21 @@ pipeline {
                  }
             }
 
+            stage('Package') {
+                steps {
+                    script {
+                        FRONTEND_VERSION = "1.0.0.${env.BUILD_NUMBER}"
+                        ARTIFACT_NAME = "kaddem-frontend-${FRONTEND_VERSION}.zip"
+
+                        bat """
+                            powershell -Command "Compress-Archive -Path dist\\* -DestinationPath ${ARTIFACT_NAME}"
+                            dir ${ARTIFACT_NAME}
+                        """
+                    }
+                }
+            }
+
+
 
     stage('Build Angular') {
               steps {
