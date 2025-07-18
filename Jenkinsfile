@@ -13,7 +13,7 @@ pipeline {
   }
 
   stages {
-    stage('checkout') {
+    stage('git') {
      steps {
                     git branch: 'master', url: 'https://github.com/wajih0/Ceation-pipeline-frontend.git'
                 }
@@ -34,7 +34,7 @@ pipeline {
 
 
 
-    stage('Build Angular') {
+    stage('Build ') {
               steps {
                   bat 'npm install'
                   bat 'npm run build -- --configuration=production'
@@ -105,7 +105,7 @@ stage('Upload Front to Nexus') {
 
 
 
-    stage('Build Docker Image') {
+    stage(' Docker Build & Push') {
       steps {
         bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
       }
